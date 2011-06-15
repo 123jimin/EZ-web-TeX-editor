@@ -1,8 +1,16 @@
-var eqPHolder = '\\placeholder';
-var buttonInfo = {dx:80,dy:30,colNum:7};
+/**
+* texEdit.js
+* A JS code to create an editor.
+* jQuery 1.6 with jQueryCaret plugin and MathJax 1.1 required. (before texEdit.js is inserted)
+* buttonList.js and replaceRule.js required. (after texEdit.js is inserted)
+*/
 
-function texfy(tex){
-	//placeholder
+var eqPHolder = '\\placeholder'; //the placeholder.
+var buttonInfo = {dx:80,dy:30,colNum:7}; //information of arrange of buttons. dx,dy : distance between button chunks,
+//colNum : number of button chunks in a row.
+
+function texfy(tex){ //EZ TeX -> TeX
+	//replace placeholders
 	var i=0;
 	var colArr = ['','red','orange','green','blue','cyan','purple','magenta'];
 	if(eqPHolder!='')while(tex.indexOf(eqPHolder)>=0){
@@ -10,7 +18,7 @@ function texfy(tex){
 		tex=tex.replace(eqPHolder,(col==''?'':'\\color{'+colArr[i%colArr.length]+'}')+'{\\small\\bigcirc}');
 		i++;
 	}
-	//replaceRule
+	//replace by replaceRule
 	tex = tex.replace(/ /g,'  ');
 	for(i=0;i<replaceRule.length;i++){
 		tex = tex.replace(replaceRule[i][0],' '+replaceRule[i][1]+' ');
@@ -21,11 +29,11 @@ function texfy(tex){
 	tex = tex.replace(/ ([^A-Za-z0-9]|$)/g,'$1');
 	return tex;
 }
-function delegate(scope, func, data){
+function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
     return function(){func.apply(scope, Array.prototype.slice.apply(arguments).concat(data));}
 }
 (function(){
-	function makeEditor(cName){
+	function makeEditor(cName){ //Makes an editor. cName : classname of divs where the editor is inserted. Default : texEditor
 		cName=cName?'.'+cName:'.texEditor';
 		$(cName).each(function(ind){
 			var _this = $(this);
@@ -38,14 +46,14 @@ function delegate(scope, func, data){
 				var tFront = t.slice(0,ts);
 				var tBack = t.slice(te);
 				if(e.altKey){
-					if(e.keyCode==88){
+					if(e.keyCode==88){ //Alt+X : Change code into TeX.
 						var texCode = texfy(_this.find('.inputPanel').val());
 						_this.find('.inputPanel').val(texCode).caret(0,texCode.length);
 					}
 					return;
 				}
 				if(e.ctrlKey && e.keyCode!=17){
-					console.log(e.keyCode);
+					console.log(e.keyCode); //Will be used for keyboard shortcuts.
 					switch(e.keyCode){
 						case 32:
 							e.preventDefault();
@@ -68,26 +76,26 @@ function delegate(scope, func, data){
 					$(this).caret(ts,ts);
 					e.preventDefault();
 				}
-				setTimeout(delegate(this,handleKeydown,[_this,e]),5);
+				setTimeout(delegate(this,handleKeydown,[_this,e]),5); //5 ms delay
 			}).mousedown(function(e){
 				$(this).data('isDragging',true);
 				setTimeout(delegate(this,handleMousedown,[$(this),e]),5);
 			}).mouseup(function(e){
 				$(this).data('isDragging',false);
-			}).bind('input',handleInputDragging).bind('propertychange',handleInputDragging);
+			}).bind('input',handleInputDragging).bind('propertychange',handleInputDragging); //to handle dragging
 		});
 	}
-	function handleInputDragging(){
+	function handleInputDragging(){ //Handle text dragging.
 		if($(this).data('isDragging')){
 			$(this).data('isDragging',false);
 			renderEditorTeX($($(this).parents()[1]),this.value);
 		}
 	}
-	function getImgHTML(src,alt,title){
+	function getImgHTML(src,alt,title){ //Get HTML image string.
 		if(!title)title=alt;
 		return '<img src="'+src+'" alt="'+alt+'" title="'+title+'"/>';
 	}
-	function addButtons(bRoot,textArea){
+	function addButtons(bRoot,textArea){ //Add buttons to the editor.
 		bRoot.parent().find('.inputPanel').css('margin-top',25+~~((editButtons.length-1)/buttonInfo.colNum)*buttonInfo.dy);
 		for(i=0;i<editButtons.length;i++){
 			var btnData = editButtons[i];
@@ -99,13 +107,13 @@ function delegate(scope, func, data){
 			.mouseenter(function(e){
 				$(e.currentTarget).parent().find('.buttonPopupWrap').fadeIn(200);
 			});
-			//add buttons
+			//Add button chunks.
 			var btnPopup = bWrap.find('.buttonPopupWrap table.buttonPopup');
 			for(j=0;j<btnData.content.length;j++){
 				btnPopup.append('<tr class="row'+j+'"></tr>');
 				var btnRow = btnPopup.find('.row'+j);
 				for(k=0;k<btnData.content[j].length;k++){
-					var singleBtnData = btnData.content[j][k];
+					var singleBtnData = btnData.content[j][k]; //Single button data
 					if(!singleBtnData.data){
 						btnRow.append('<td class="col'+k+'"></td>');
 						continue;
@@ -114,21 +122,24 @@ function delegate(scope, func, data){
 					if(singleBtnData.colspan&&singleBtnData.colspan>1)
 						colSpanTxt = ' colspan="'+singleBtnData.colspan+'"';
 					btnRow.append('<td class="col'+k+'"'+colSpanTxt+'></td>');
-					var btnCell = btnRow.find('.col'+k);
+					var btnCell = btnRow.find('.col'+k); //A button.
 					btnCell.append(getImgHTML(singleBtnData.img,singleBtnData.data,singleBtnData.title));
 					btnCell.data('texCode',singleBtnData.data);
-					btnCell.mousedown(function(e){
+					btnCell.mousedown(function(e){ //Insert
 						var t = textArea.val();
 						var st = textArea.caret().start;
 						var se = textArea.caret().end;
 						var sData = $(e.currentTarget).data('texCode');
+						//Lack of g flag in RegEx below is intended, to replace only the first @.
 						if(!!textArea.caret().text) sData = sData.replace(/\@/,textArea.caret().text);
+						//Other @s are replaced to the placeholder.
 						sData = sData.replace(/(\@|\#)/g,eqPHolder);
+						//Add space before and after the TeX code to be inserted...
 						if(t.slice(st-1,st).match(/[^ ]/)) sData = ' '+sData;
 						if(t.slice(se,se+1).match(/[^ ]/)) sData += ' ';
 						textArea.val(t.slice(0,st)+sData+t.slice(se));
+						//Place the cursor correctly.
 						st+=sData.length;
-						console.log(st);
 						textArea.caret(st,st);
 						renderEditorTeX($($(e.currentTarget).parents()[7]),textArea.val());
 					}).mouseenter(function(e){
