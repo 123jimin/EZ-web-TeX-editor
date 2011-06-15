@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'/>
+		<title>TeX editor using MathJax</title>
+		
+		<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+		<script>//<!--
+			MathJax.Hub.Config({
+				TeX:{extensions:["AMSsymbols.js"]}
+			});
+		//--></script>
+		<script src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+		<script src="./js/jQueryCaret.js"></script>
+		<script src="./js/texEdit.js"></script>
+		<script src="./js/replaceRule.js"></script>
+		<script src="./js/buttonList.js"></script>
+		<style>
+			body{
+				background-color:white;
+				text-align:center;
+			}
+			.display{
+				background-color:white;
+				color:black;
+				margin-left:auto;margin-right:auto;width:600px;
+			}
+			.MathJax_Display{
+				width:600px !important;
+				margin-left:auto;margin-right:auto;
+			}
+			.texEditor{
+				margin-left:auto;margin-right:auto;
+			}
+			.inputPanel{
+				width:50%;
+				height:160px;
+				font-size:24px;
+				font-family:"나눔고딕코딩";
+			}
+			
+			.buttons{
+				width:50%;
+				position:relative;
+				margin-left:auto;margin-right:auto;
+			}
+			.buttonWrap{
+				position:relative;
+			}
+			.buttonDisplay, .buttonPopupWrap{
+				position:absolute;
+			}
+			.buttonPopupWrap{
+				z-index:999;
+			}
+			.buttonPopup{
+				border-collapse:collapse;
+			}
+			.buttonPopup tr td{
+				border:1px solid grey;
+				background-color:white;
+				margin:1px;
+				opacity:0.6;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Easy TeX Editor</h1>
+		<div class="texEditor">
+		</div>
+	</body>
+</html>
