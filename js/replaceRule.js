@@ -1,3 +1,21 @@
+/**
+* js/replaceRule.js
+* Replace rules
+*  example : a in A ==> a in B is converted into
+*            a \in A \Rightarrow a \in B
+*/
+
+/*
+var aliasKeywords (Array)
+  Description : An array containing info about alias of keywords.
+var noBackslashKeywords (Array)
+  Description : The editor will add backslash automatically before keywords in this array.
+var replaceRule : (Array)
+  Description : An aray containing info about replacing words.
+  Elements : An array [RegEx, TeX]
+function makeReplaceRule()
+  Description : A function to append noBackslashKeywords and aliasKeywords to replaceRule.
+*/
 var aliasKeywords = [
 	['del','nabla'],
 	['nl','newline'],
@@ -105,7 +123,7 @@ function makeReplaceRule(){
 		['\\|\\-','\\vdash'],
 		['\\|\\=','\\models'],
 		['\\-\\|','\\dashv']
-	];
+	]; //Default replace rules. Longest comes first.
 	for(i=0;i<noBackslashKeywords.length;i++) aliasKeywords.push([noBackslashKeywords[i],noBackslashKeywords[i]]);
 	for(i=0;i<aliasKeywords.length;i++) replaceRule.push(['([^A-Za-z0-9\\\\]|^)('+aliasKeywords[i][0]+')([^A-Za-z0-9]|$)','$1\\'+aliasKeywords[i][1]+'$3']);
 	for(i=0;i<replaceRule.length;i++) replaceRule[i][0] = new RegExp(replaceRule[i][0],'g');
