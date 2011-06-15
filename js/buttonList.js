@@ -1,20 +1,49 @@
-var atLocal = true;
+/**
+* js/buttonList.js
+* Generates the list of buttons in the editor
+**/
+
+/*
+var atLocal (boolean)
+  Description : Will the images used on buttons be loaded from img/ directory?
+var editButtons (Array)
+  Description : List of buttons.
+  Elements : An object (chunk of buttons).
+    title : Title of the chunk of buttons.
+    display : A 'button' to be displayed to preview the chunk of buttons.
+    content : List of buttons in the chunk of buttons.
+function _$_(title,texInsert,texDisp,latexRender,colspan)
+  Description : this function makes an object which contains data of a button.
+  Arguments
+    title : title of the button
+    texInsert : TeX to be inserted. Use '@' to represent the selected text. Default : title
+    texDisp : TeX to be displayed. Default : texInsert
+    latexRender : LaTeX renderer to be used. Use '@' to represent LaTeX. Default : Google Chart API
+    colspan : Colspan value of a button. Default : 1
+  Return value : An object.
+    title : Title of the button.
+    img : Image URL of the button.
+    data : TeX to be inserted.
+    colspan : colspan of the button.
+*/
+var atLocal = true; //see function _$_.
 function _$_(title,texInsert,texDisp,latexRender,colspan){
-	if(title=='<-') atLocal = false;
-	var encodeFunction = encodeURIComponent;
-	if(!title) return {'title':'','img':'','data':''};
+	if(title=='<-') atLocal = false; //If list of button is completed and images are all saved,
+//then atLocal = true always and this function should be modified.
+	var encodeFunction = encodeURIComponent; //Encoding function to used.
+	if(!title) return {'title':'','img':'','data':''}; //empty button
 	if(!texInsert||texInsert==0) texInsert = title;
 	if(!texDisp||texDisp==0) texDisp = texInsert;
-	if(latexRender=='codecogs') latexRender = 'http://latex.codecogs.com/png.latex?@';
+	if(latexRender=='codecogs') latexRender = 'http://latex.codecogs.com/png.latex?@'; //CodeCogs LaTeX renderer
 	if(!colspan||colspan==0) colspan=1;
-	texDisp = texDisp.replace(/\@/g,'{\\small\\bigcirc}');
+	texDisp = texDisp.replace(/\@/g,'{\\small\\bigcirc}'); //Change @ to a circle.
 	if(atLocal){
-		latexRender = './img/@.png';
+		latexRender = './img/@.png'; //local image file
 		encodeFunction = function(s){return s.replace(/\\/g,'_')
 		.replace(/( |\{|\})+/g,'').replace(/\+/g,'P').replace(/\-/g,'M').replace(/\>/g,'R')
 		.replace(/\</g,'L').replace(/\=/g,'EQ').replace(/\./g,'D').replace(/([A-Z])/g,'!$1')};
 	}else if(!latexRender||latexRender==0){
-		latexRender = 'http://chart.googleapis.com/chart?cht=tx&chl=@';
+		latexRender = 'http://chart.googleapis.com/chart?cht=tx&chl=@'; //Default LaTeX renderer.
 	}
 	texDisp = latexRender.replace('@',encodeFunction(texfy(texDisp)));
 	return {'title':title,'img':texDisp,'data':texInsert,'colspan':colspan};
