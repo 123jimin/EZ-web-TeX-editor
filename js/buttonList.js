@@ -6,6 +6,8 @@
 /*
 var atLocal (boolean)
   Description : Will the images used on buttons be loaded from img/ directory?
+var localDirectory (String)
+  Description : local directory of image file. Default : './img/'
 var editButtons (Array)
   Description : List of buttons.
   Elements : An object (chunk of buttons).
@@ -27,6 +29,9 @@ function _$_(title,texInsert,texDisp,latexRender,colspan)
     colspan : colspan of the button.
 */
 var atLocal = true; //see function _$_.
+var localDirectory = "./img/";
+//test purpose
+localDirectory = "https://github.com/123jimin/EZ-web-TeX-editor/raw/master/img/";
 function _$_(title,texInsert,texDisp,latexRender,colspan){
 	if(title=='<-') atLocal = false; //If list of button is completed and images are all saved,
 //then atLocal = true always and this function should be modified.
@@ -38,7 +43,7 @@ function _$_(title,texInsert,texDisp,latexRender,colspan){
 	if(!colspan||colspan==0) colspan=1;
 	texDisp = texDisp.replace(/\@/g,'{\\small\\bigcirc}'); //Change @ to a circle.
 	if(atLocal){
-		latexRender = './img/@.png'; //local image file
+		latexRender = localDirectory+'@.png'; //local image file
 		encodeFunction = function(s){return s.replace(/\\/g,'_')
 		.replace(/( |\{|\})+/g,'').replace(/\+/g,'P').replace(/\-/g,'M').replace(/\>/g,'R')
 		.replace(/\</g,'L').replace(/\=/g,'EQ').replace(/\./g,'D').replace(/([A-Z])/g,'!$1')};
