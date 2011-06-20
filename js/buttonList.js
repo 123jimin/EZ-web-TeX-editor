@@ -31,7 +31,7 @@ function _$_(title,texInsert,texDisp,latexRender,colspan)
 var atLocal = true; //see function _$_.
 var localDirectory = "./img/";
 //test purpose
-localDirectory = "https://github.com/123jimin/EZ-web-TeX-editor/raw/master/img/";
+//localDirectory = "https://github.com/123jimin/EZ-web-TeX-editor/raw/master/img/";
 function _$_(title,texInsert,texDisp,latexRender,colspan){
 	if(title=='<-') atLocal = false; //If list of button is completed and images are all saved,
 //then atLocal = true always and this function should be modified.
