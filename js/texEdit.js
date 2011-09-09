@@ -240,8 +240,8 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 					default:
 						texInput.val(insertString(texCode,st,eqPHolder+insParen[1]));
 				}
+				texInput.caret(st,st+seln);
 			}
-			texInput.caret(st,st+seln);
 			texCode = texInput.val();
 		}
 		
