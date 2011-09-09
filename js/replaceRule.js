@@ -122,7 +122,11 @@ function makeReplaceRule(){
 		['\\/\\\\','\\wedge'],
 		['\\|\\-','\\vdash'],
 		['\\|\\=','\\models'],
-		['\\-\\|','\\dashv']
+		['\\-\\|','\\dashv'],
+		
+		//newline
+		['\\r',''],
+		['\\n\\n','\\newline']
 	]; //Default replace rules. Longest comes first.
 	for(i=0;i<noBackslashKeywords.length;i++) aliasKeywords.push([noBackslashKeywords[i],noBackslashKeywords[i]]);
 	for(i=0;i<aliasKeywords.length;i++) replaceRule.push(['([^A-Za-z0-9\\\\]|^)('+aliasKeywords[i][0]+')([^A-Za-z0-9]|$)','$1\\'+aliasKeywords[i][1]+'$3']);
