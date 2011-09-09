@@ -130,7 +130,8 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 						var st = textArea.caret().start;
 						var se = textArea.caret().end;
 						var sData = $(e.currentTarget).data('texCode');
-						//Lack of g flag in RegEx below is intended, to replace only the first @.
+						//Lack of g flag in RegEx below is intended, to replace only the first
+						//to the selected text.
 						if(!!textArea.caret().text) sData = sData.replace(/\@/,textArea.caret().text);
 						//Other @s are replaced to the placeholder.
 						sData = sData.replace(/(\@|\#)/g,eqPHolder);
@@ -197,6 +198,7 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 		var texInput = x.find('.inputPanel');
 		var texCode = texInput.val();
 		var st = texInput.caret().start;
+		var nd = texInput.caret().end;
 		//Auto-select Placeholder
 		if(c==37||c==39){
 			if(c==37) st-=eqPHolder.length;
@@ -212,6 +214,7 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 			var tempMatch = prevStr.match(/[A-Za-z0-9]+/g);
 			var identStr = tempMatch?prevStr.match(/[A-Za-z0-9]+/g)[0]:'';
 			identStr = getType(identStr)+prevStr.slice(identStr.length);
+			console.log(texCode.charCodeAt(nd));
 			switch(identStr){
 				/*Templates*/
 				case 'begin{':
