@@ -467,6 +467,14 @@ var editButtons = [
 			_$_('oint'),
 			_$_('oint_{@}',0,0,'codecogs'),
 			_$_('int_{@}^{@}',0,0,'codecogs')
+		],
+		[
+			_$_('bigcup'),
+			_$_('bigcup_{@}',0,0,'codecogs'),
+			_$_('bigcup_{@}^{@}',0,0,'codecogs'),
+			_$_('bigcap'),
+			_$_('bigcap_{@}',0,0,'codecogs'),
+			_$_('bigcap_{@}^{@}',0,0,'codecogs')
 		]
 	]
 }
