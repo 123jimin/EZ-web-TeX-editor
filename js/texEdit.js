@@ -198,7 +198,7 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 		var texInput = x.find('.inputPanel');
 		var texCode = texInput.val();
 		var st = texInput.caret().start;
-		var nd = texInput.caret().end;
+		var se = texInput.caret().end;
 		//Auto-select Placeholder
 		if(c==37||c==39){
 			if(c==37) st-=eqPHolder.length;
@@ -214,31 +214,32 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 			var tempMatch = prevStr.match(/[A-Za-z0-9]+/g);
 			var identStr = tempMatch?prevStr.match(/[A-Za-z0-9]+/g)[0]:'';
 			identStr = getType(identStr)+prevStr.slice(identStr.length);
-			console.log(texCode.charCodeAt(nd));
-			switch(identStr){
-				/*Templates*/
-				case 'begin{':
-					texInput.val(insertString(texCode,st,eqPHolder+'} '+eqPHolder+' end{}'))
-					break;
-				case 'color{':
-					texInput.val(insertString(texCode,st,'Green}{'+eqPHolder+'}'))
-					seln = 5;
-					break;
-				case 'twoArg{':
-					texInput.val(insertString(texCode,st,eqPHolder+'}{'+eqPHolder+'}'));
-					break;
-				case 'subsup_{':
-					texInput.val(insertString(texCode,st,eqPHolder+'}^{'+eqPHolder+'}'));
-					break;
-				case 'left(':
-				case 'left[':
-					texInput.val(insertString(texCode,st,eqPHolder+' right'+insParen[1]));
-					break;
-				case 'sqrt[':
-					texInput.val(insertString(texCode,st,eqPHolder+']{'+eqPHolder+'}'));
-					break;
-				default:
-					texInput.val(insertString(texCode,st,eqPHolder+insParen[1]));
+			if(texCode.length<se||' \t\r\n'.indexOf(texCode[se])>=0){
+				switch(identStr){
+					/*Templates*/
+					case 'begin{':
+						texInput.val(insertString(texCode,st,eqPHolder+'} '+eqPHolder+' end{}'))
+						break;
+					case 'color{':
+						texInput.val(insertString(texCode,st,'Green}{'+eqPHolder+'}'))
+						seln = 5;
+						break;
+					case 'twoArg{':
+						texInput.val(insertString(texCode,st,eqPHolder+'}{'+eqPHolder+'}'));
+						break;
+					case 'subsup_{':
+						texInput.val(insertString(texCode,st,eqPHolder+'}^{'+eqPHolder+'}'));
+						break;
+					case 'left(':
+					case 'left[':
+						texInput.val(insertString(texCode,st,eqPHolder+' right'+insParen[1]));
+						break;
+					case 'sqrt[':
+						texInput.val(insertString(texCode,st,eqPHolder+']{'+eqPHolder+'}'));
+						break;
+					default:
+						texInput.val(insertString(texCode,st,eqPHolder+insParen[1]));
+				}
 			}
 			texInput.caret(st,st+seln);
 			texCode = texInput.val();
