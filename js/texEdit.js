@@ -214,7 +214,7 @@ function delegate(scope, func, data){ //To use in setTimeout(). For IE. :(
 			var tempMatch = prevStr.match(/[A-Za-z0-9]+/g);
 			var identStr = tempMatch?prevStr.match(/[A-Za-z0-9]+/g)[0]:'';
 			identStr = getType(identStr)+prevStr.slice(identStr.length);
-			if(texCode.length<se||' \t\r\n'.indexOf(texCode[se])>=0){
+			if(texCode.length==se||' \t\r\n'.indexOf(texCode[se])>=0){
 				switch(identStr){
 					/*Templates*/
 					case 'begin{':
